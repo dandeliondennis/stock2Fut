@@ -1,0 +1,35 @@
+if __name__ == '__main__':
+    nlen = len(tdatelist)
+    funcSet = [{factorCalcList}]
+    factor = defaultdict(list)
+    readCycle = 75
+    startRange, endRange = sliceTime(readCycle, nlen)
+    startDate = startRange[0]
+    iterRange = zip(startRange, endRange)
+    # iterRange = list(iterRange)[-1:]
+    # startDate = iterRange[0][0]
+    readPool = Pool(processes=15)
+    for startIndex, endIndex in iterRange:
+        print(tdatelist[startIndex], tdatelist[endIndex - 1])
+        readDate = itertools.product(tdatelist[startIndex:endIndex], timeFlage)
+        readData = readPool.imap(readFunc, readDate, chunksize=5)
+        print('read data complete!')
+        handleReadData = readPool.imap(commonCalcFunc, readData, chunksize=15)
+        print('handle data complete!')
+        dataGenerators = itertools.tee(handleReadData, len(funcSet))
+        for funcID, func in enumerate(funcSet):
+            factor[funcID].extend(readPool.imap(func, dataGenerators[funcID], chunksize=(5 * 3)))
+            print('{{}} func complete!'.format(funcID))
+        print('calc factor complete!')
+    readPool.close()
+    readPool.join()
+    #
+    name = '{name}_'
+    ID = [str(_) for _ in range({start}, {end_1})]
+
+    for funcID, factorDictList in factor.items():
+        dateData = list(itertools.product(tdatelist[startDate:], [1, 2, 3]))
+        idxData = ['{{}}_{{}}'.format(i, j) for i, j in dateData]
+        resDict2csv(factor[funcID], dateData, name, ID[funcID])
+
+

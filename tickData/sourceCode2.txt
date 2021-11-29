@@ -1,0 +1,7 @@
+def factorCalcFunc_{idx}(dataDictList):
+    res = {{}}
+    for inst in dataDictList:
+        res[inst] = {name}_{idx}(dataDictList[inst])
+    return res
+
+

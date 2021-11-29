@@ -1,0 +1,26 @@
+import itertools
+from collections import defaultdict
+from readTickDataParallel import readFunc, tdatelist, timeFlage
+from multiprocessing import Pool
+from resToCsv import resDict2csv
+from study_{name}.{name}{start}to{end} import ({preCalcFunc}, {factorFuncList})
+
+def sliceTime(cycle, nlen):
+    end = list(range(cycle, nlen, cycle))
+    endEnd = end[-1]
+    start = list(range(0, endEnd, cycle))
+    if endEnd == nlen:
+        pass
+    else:
+        start.append(endEnd)
+        end.append(nlen)
+    return start, end
+
+
+def commonCalcFunc(dataDict):
+    res = {{}}
+    for inst in dataDict:
+        res[inst] = {preCalcFunc}(dataDict[inst])
+    return res
+
+

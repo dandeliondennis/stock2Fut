@@ -1,0 +1,7 @@
+from tickData.tickCsvToAlpha import tickFactorRead
+
+PATH = '{path_save}tick_{name}_/{name}_{{}}.csv'
+
+({factorFuncList}) = (tickFactorRead(PATH.format(i)) for i in range({start}, {end}))
+
+
