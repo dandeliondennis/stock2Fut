@@ -8,6 +8,7 @@ tdatelist = [i[:-2] for i in fileList[::3]]
 SYMBOLS = ['AG', 'AL', 'AU', 'BU', 'C', 'CF', 'CU', 'EB', 'EG', 'FG', 'FU',
            'HC', 'I', 'J', 'JM', 'L', 'M', 'MA', 'NI', 'OI', 'P', 'PF', 'PP',
            'RB', 'RM', 'RU', 'SA', 'SC', 'SP', 'TA', 'V', 'Y', 'ZC', 'ZN']
+symbols = set(SYMBOLS)
 timeFlage = [1, 2, 3]
 
 
@@ -41,12 +42,12 @@ BidPrice1 = 6
 def handleTickData(arr2d):
     arr2d[:, [AskPrice1, BidPrice1]] = np.where(arr2d[:, [AskPrice1, BidPrice1]] == 0, np.nan,
                                                 arr2d[:, [AskPrice1, BidPrice1]])
-    vol = np.diff(arr2d[:, Volume], prepend=np.nan)
-    vol = np.where(vol < 0.1, np.nan, vol)
-    amount = np.diff(arr2d[:, Turnover], prepend=np.nan)
-    amount = np.where(amount < 0.1, np.nan, amount)
-    vol = vol.reshape((-1,1))
-    amount = amount.reshape((-1,1))
+    vol = np.diff(arr2d[:, Volume], prepend=0)
+    vol = np.where(vol < 0, np.nan, vol)
+    amount = np.diff(arr2d[:, Turnover], prepend=0)
+    amount = np.where(amount < 0, np.nan, amount)
+    vol = vol.reshape((-1, 1))
+    amount = amount.reshape((-1, 1))
     return np.concatenate((arr2d, vol, amount), axis=1)
 
 
@@ -65,7 +66,7 @@ def readFunc(para):
     for root, dirs, files in os.walk(directory):
         for file in files:
             name, fileType = file.split('.')
-            if fileType == "csv":
+            if fileType == "csv" and (name in symbols):
                 filePath = ''.join([directory, '/', file])
-                data[name] = handleTickDataComplete(readTickData(filePath))
+                data[name] = readTickData(filePath)
     return data

@@ -1,10 +1,11 @@
 # 第四个版本 不进行sliceTime， 读一天算一天，为了防止内存爆炸，在读的队列里规定最大能读取的内容
 import itertools
 import time
-from study_orderImbalance.orderImbalance3to6_new import (calcVolDiff, orderImbalance_3,
-                                                         orderImbalance_4, orderImbalance_5, orderImbalance_6)
+from study_smartVol.smartVol12_para import (calcVolQuantile, smartVol12_0, smartVol12_1, smartVol12_2,
+                                            smartVol12_3, smartVol12_4, smartVol12_test)
+
 from Factor import DayFactor, Factor
-from readTickDataParallel2 import readFunc, tdatelist, timeFlage
+from readTickDataParallel2 import readFunc, tdatelist, timeFlage, handleTickDataComplete
 from multiprocessing import Process, Manager
 
 
@@ -13,7 +14,7 @@ def commonCalcFunc(dataDict):
     res = {}
     for inst in dataDict:
         #
-        res[inst] = calcVolDiff(dataDict[inst])
+        res[inst] = calcVolQuantile(handleTickDataComplete(dataDict[inst]))
     return res
 
 
@@ -33,14 +34,18 @@ def readFunc_iter(dateList, q):
     return
 
 
-funcSet = [orderImbalance_3, orderImbalance_4, orderImbalance_5, orderImbalance_6]
-name = 'orderImbalance_test4_'
-Factor3 = Factor(name, '3')
-Factor4 = Factor(name, '4')
-Factor5 = Factor(name, '5')
-Factor6 = Factor(name, '6')
-factorSet = [Factor3, Factor4, Factor5, Factor6]
-tdatelist1 = tdatelist[:3]
+funcSet = [smartVol12_0, smartVol12_1, smartVol12_2,
+           smartVol12_3, smartVol12_4, smartVol12_test]
+name = 'smartVol_'
+Factor12_0 = Factor(name, '12_0')
+Factor12_1 = Factor(name, '12_1')
+Factor12_2 = Factor(name, '12_2')
+Factor12_3 = Factor(name, '12_3')
+Factor12_4 = Factor(name, '12_4')
+Factor12_test = Factor(name, '12_test')
+
+factorSet = [Factor12_0, Factor12_1, Factor12_2, Factor12_3, Factor12_4, Factor12_test]
+tdatelist1 = tdatelist[:]
 nlen = len(tdatelist1)
 readDate = itertools.product(tdatelist1, timeFlage)
 
@@ -51,7 +56,7 @@ def handle_iter(src_q):
         if data is None:
             dateData = list(itertools.product(tdatelist1, timeFlage))
             for factor in factorSet:
-                print(factor.dayFactorList)
+                # print(factor.dayFactorList)
                 factor.write_csv(dateData)
             break
         else:
@@ -59,8 +64,7 @@ def handle_iter(src_q):
             for funcID, func in enumerate(funcSet):
                 res = factorCalcFunc(tmpRes, func)
                 factorSet[funcID].addOneDay(res)
-                print(factorSet[funcID].dayFactorList)
-        print('one day complete!')
+                # print(factorSet[funcID].dayFactorList)
     return
 
 
