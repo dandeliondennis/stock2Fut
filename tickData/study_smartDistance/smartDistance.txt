@@ -1,0 +1,4 @@
+说明
+smartDistance沿袭自smartVol
+smartVol筛选成交量较大的部分进行sharpe的计算
+现在smartDistacne将综合考虑收益率和成交量两个方面，将（ret, vol）向量和（0，0）计算距离，根据距离筛选数据，计算因子

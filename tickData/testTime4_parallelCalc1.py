@@ -1,12 +1,16 @@
 # 第四个版本 不进行sliceTime， 读一天算一天，为了防止内存爆炸，在读的队列里规定最大能读取的内容
 import itertools
 import time
-from study_smartVol.smartVol12_para import (calcVolQuantile, smartVol12_0, smartVol12_1, smartVol12_2,
-                                            smartVol12_3, smartVol12_4, smartVol12_test)
+from multiprocessing import Process, Manager
 
 from Factor import DayFactor, Factor
 from readTickDataParallel2 import readFunc, tdatelist, timeFlage, handleTickDataComplete
-from multiprocessing import Process, Manager
+from study_smallVolNoise.smallVolNoise0to1 import (calcVolQuantile, smallVolNoise0_0, smallVolNoise0_1,
+                                                   smallVolNoise0_2,
+                                                   smallVolNoise0_3, smallVolNoise0_4, smallVolNoise0_5,
+                                                   smallVolNoise0_6, smallVolNoise0_7, smallVolNoise0_8,
+                                                   smallVolNoise0_9, smallVolNoise0_10, smallVolNoise0_11,
+                                                   smallVolNoise0_12)
 
 
 #
@@ -34,18 +38,32 @@ def readFunc_iter(dateList, q):
     return
 
 
-funcSet = [smartVol12_0, smartVol12_1, smartVol12_2,
-           smartVol12_3, smartVol12_4, smartVol12_test]
-name = 'smartVol_'
-Factor12_0 = Factor(name, '12_0')
-Factor12_1 = Factor(name, '12_1')
-Factor12_2 = Factor(name, '12_2')
-Factor12_3 = Factor(name, '12_3')
-Factor12_4 = Factor(name, '12_4')
-Factor12_test = Factor(name, '12_test')
+funcSet = [smallVolNoise0_0, smallVolNoise0_1, smallVolNoise0_2,
+           smallVolNoise0_3, smallVolNoise0_4, smallVolNoise0_5,
+           smallVolNoise0_6, smallVolNoise0_7, smallVolNoise0_8,
+           smallVolNoise0_9, smallVolNoise0_10, smallVolNoise0_11,
+           smallVolNoise0_12]
 
-factorSet = [Factor12_0, Factor12_1, Factor12_2, Factor12_3, Factor12_4, Factor12_test]
-tdatelist1 = tdatelist[:]
+name = 'smallVolNoise_'
+Factor0_0 = Factor(name, '0_0')
+Factor0_1 = Factor(name, '0_1')
+Factor0_2 = Factor(name, '0_2')
+Factor0_3 = Factor(name, '0_3')
+Factor0_4 = Factor(name, '0_4')
+Factor0_5 = Factor(name, '0_5')
+Factor0_6 = Factor(name, '0_6')
+Factor0_7 = Factor(name, '0_7')
+Factor0_8 = Factor(name, '0_8')
+Factor0_9 = Factor(name, '0_9')
+Factor0_10 = Factor(name, '0_10')
+Factor0_11 = Factor(name, '0_11')
+Factor0_12 = Factor(name, '0_12')
+
+factorSet = [Factor0_0, Factor0_1, Factor0_2, Factor0_3,
+             Factor0_4, Factor0_5, Factor0_6, Factor0_7,
+             Factor0_8, Factor0_9, Factor0_10, Factor0_11,
+             Factor0_12]
+tdatelist1 = tdatelist
 nlen = len(tdatelist1)
 readDate = itertools.product(tdatelist1, timeFlage)
 
@@ -64,7 +82,6 @@ def handle_iter(src_q):
             for funcID, func in enumerate(funcSet):
                 res = factorCalcFunc(tmpRes, func)
                 factorSet[funcID].addOneDay(res)
-                # print(factorSet[funcID].dayFactorList)
     return
 
 
