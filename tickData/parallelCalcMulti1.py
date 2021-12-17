@@ -1,10 +1,7 @@
 # 第四个版本 不进行sliceTime， 读一天算一天，为了防止内存爆炸，在读的队列里规定最大能读取的内容
 import itertools
 import time
-from study_smallVolNoise.smallVolNoise0to1 import (calcVolQuantile, smallVolNoise0_8,
-                                                   smallVolNoise0_9, smallVolNoise0_10, smallVolNoise0_11,
-                                                   smallVolNoise0_12, smallVolNoise0_13, smallVolNoise0_14,
-                                                   smallVolNoise0_15, smallVolNoise0_16)
+from study_smartVol.smartVol27 import (calcVolQuantile, smartVol27)
 from Factor import DayFactor, Factor
 from readTickDataParallel2 import readFunc, tdatelist, timeFlage, handleTickDataComplete
 from multiprocessing import Process, Manager
@@ -94,27 +91,16 @@ def concat_iter(src_q, des_q, window):
     return
 
 
-win = 15
+win = 3
 
-funcSet = [smallVolNoise0_8, smallVolNoise0_9, smallVolNoise0_10, smallVolNoise0_11,
-           smallVolNoise0_12, smallVolNoise0_13, smallVolNoise0_14,
-           smallVolNoise0_15, smallVolNoise0_16]
+funcSet = [smartVol27]
 
-name = 'smallVolNoise_win=15_'
+name = 'smartVol_win=3_'
 
-Factor0_8 = Factor(name, '0_8')
-Factor0_9 = Factor(name, '0_9')
-Factor0_10 = Factor(name, '0_10')
-Factor0_11 = Factor(name, '0_11')
-Factor0_12 = Factor(name, '0_12')
-Factor0_13 = Factor(name, '0_13')
-Factor0_14 = Factor(name, '0_14')
-Factor0_15 = Factor(name, '0_15')
-Factor0_16 = Factor(name, '0_16')
+Factor27 = Factor(name, '27')
 
-factorSet = [Factor0_8, Factor0_9, Factor0_10, Factor0_11,
-             Factor0_12, Factor0_13, Factor0_14,
-             Factor0_15, Factor0_16]
+
+factorSet = [Factor27]
 tdatelist1 = tdatelist
 nlen = len(tdatelist1)
 readDate = list(itertools.product(tdatelist1, timeFlage))

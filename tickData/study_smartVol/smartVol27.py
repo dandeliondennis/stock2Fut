@@ -43,7 +43,7 @@ def smartVol27(struct):
     df = struct.df
     if df.size == 0:
         return np.nan
-    thresh = struct.info[3]
+    thresh = struct.info[0]
     ret_all = df[:, ret_col]
     ret_sub = ret_all[df[:, VOLCOL] > thresh]
     if np.all(np.isnan(ret_sub)):
